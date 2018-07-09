@@ -8,7 +8,7 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.model_selection import GridSearchCV, cross_val_predict
 import matplotlib.pyplot as plt
 
-from feature_engineering_ml import *
+from feature_engineering import *
 
 def logisticModel(Xtrain, ytrain):
 
@@ -52,21 +52,6 @@ def adaBoost_predict(Xtrain, ytrain):
     predictedAda = fit.predict(Xtrain)
     return predictedAda
 
-
-def roc(yTrue, yHat):
-    fpr, tpr, thresholds = roc_curve(yTrue, yHat)
-    print("fpr ", fpr)
-    print("tpr ", tpr)
-    print("thresholds ", thresholds)
-    auc_score = auc(fpr, tpr)
-    print('auc score:', auc_score)
-    plt.plot(fpr, tpr, 'b')
-    #plt.plot([0, 1], [0, 1],'r--')
-    plt.xlim([0, 1])
-    plt.ylim([0, 1])
-    plt.ylabel('True Positive Rate')
-    plt.xlabel('False Positive Rate')
-    plt.show()
 
 
 # def profit_curve(yTrue,yHat):
@@ -168,15 +153,29 @@ if __name__ == '__main__':
     # X = build_X(df,model="not logistic")
     X = build_X(df)
 
-    # predictedLogistic = logisticModel(X, y)
-    # roc(y, predictedLogistic)
-
-    # predictedRF = randomForestModel(X, y)
-    # roc(y, predictedRF)
-
+    predictedLogistic = logisticModel(X, y)
+    predictedRF = randomForestModel(X, y)
     predictedAda = adaBoost(X, y)
-    roc(y, predictedAda)
+
     predictedAda_label = adaBoost_predict(X,y)
+
+fpr_l, tpr_l, thresholds_l = roc_curve(y, predictedLogistic)
+auc_score_l = auc(fpr_l, tpr_l)
+fpr_rf, tpr_rf, thresholds_rf = roc_curve(y, predictedRF)
+auc_score_rf = auc(fpr_rf, tpr_rf)
+fpr_a, tpr_a, thresholds_a = roc_curve(y, predictedAda)
+auc_score_a = auc(fpr_a, tpr_a)
+
+plt.figure(1)
+plt.plot([0, 1], [0, 1], 'k--')
+plt.plot(fpr_l, tpr_l, label= ('Logistic, AUC: {}'.format(auc_score_l)))
+plt.plot(fpr_rf, tpr_rf, label=('Random Forest, AUC: {}'.format(auc_score_rf)))
+plt.plot(fpr_a, tpr_a, label=('Adaboost, AUC: {}'.format(auc_score_a)))
+plt.xlabel('False positive rate')
+plt.ylabel('True positive rate')
+plt.title('ROC curve')
+plt.legend(loc='best')
+plt.show()
 
 
     cost_benefit = np.array([[7, -3], [0, 0]])
