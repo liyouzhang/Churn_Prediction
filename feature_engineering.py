@@ -3,7 +3,7 @@ import numpy as np
 
 # df = pd.read_csv('data/churn_train.csv')
 
-def build_y(df, delta_days='30 days'):
+def build_y(df, delta_days='90 days'):
     today = df['last_trip_date'].max()
     delta = pd.Timedelta(delta_days)
     df['churn?'] = (df['last_trip_date'] < (today-delta)) *1
@@ -41,7 +41,7 @@ def logify(df, col_list=['avg_dist', 'avg_rating_by_driver', 'avg_rating_of_driv
         df[col+'_log'] = np.log(df[col]+1)
     return df
 
-def feature_creation(df, delta_days='30 days'):
+def feature_creation(df, delta_days='90 days'):
     # Create user lifespan
     today = df['last_trip_date'].max()
     delta = pd.Timedelta(delta_days)
@@ -63,7 +63,7 @@ def feature_engineering(df):
     data = dummify(data, ['city', 'phone', 'luxury_car_user'])
     # print(df.columns)
     logify(df, ['avg_dist', 'avg_rating_by_driver', 'avg_rating_of_driver'])
-    data = feature_creation(data, '30 days')
+    data = feature_creation(data, '90 days')
     data = interactify(data, interacter1=['user_rated_driver'], interacter2=['avg_rating_of_driver'])
     # print(df.columns)
     return df
