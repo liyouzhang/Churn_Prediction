@@ -79,7 +79,7 @@ def build_X(df, model='logisticModel'):
     cols_to_keep_nonparam = ['city_Astapor', 'phone_Android',
                         'luxury_car_user_False',
                         'avg_dist', 'avg_rating_by_driver', 'avg_rating_of_driver']
-                        
+
     if model == 'logisticModel':
         X = df[cols_to_keep]
     else:

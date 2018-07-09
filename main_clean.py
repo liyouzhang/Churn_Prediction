@@ -127,11 +127,12 @@ if __name__ == '__main__':
     plt.ylabel('True positive rate')
     plt.title('ROC curve')
     plt.legend(loc='best')
-    plt.show()
+    plt.savefig('roc.png')
+    plt.close()
+
 
     # Plot PDPs
     print("$ PDP Plots")
-
     clf = GradientBoostingRegressor(learning_rate=0.5, n_estimators=200, max_depth=3)
     fit = clf.fit(X, y)
 
@@ -146,8 +147,6 @@ if __name__ == '__main__':
     fig, axs = plot_partial_dependence(fit, X, features, feature_names=names, n_jobs=2, grid_resolution=50)
     fig.set_size_inches(18,12)
     fig.tight_layout()
-    # axs.x_axis.label.set_size(30)
-    # axs.y_axis.label.set_size(30)
     fig.savefig('pdp.png')
     plt.close(pdp)
 
