@@ -3,45 +3,56 @@ import pandas as pd
 from sklearn.linear_model import LogisticRegression
 from sklearn import metrics
 from sklearn.metrics import roc_curve, auc, confusion_matrix
-from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier
+from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier, GradientBoostingClassifier
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.model_selection import GridSearchCV, cross_val_predict
 import matplotlib.pyplot as plt
 
 from feature_engineering import *
 
-def logisticModel(Xtrain, ytrain):
-
-
+def logisticModel(Xtrain, ytrain, X_test):
     # logReg = LogisticRegression()
     # fitted = logReg.fit(X, y)
-    predictedLogistic = cross_val_predict(LogisticRegression(), Xtrain, ytrain, cv=3,method='predict_proba')[:,1]
+    # predictedLogistic = cross_val_predict(LogisticRegression(), Xtrain, ytrain, cv=3,method='predict_proba')[:,1]
+    lg = LogisticRegression()
+    fit = lg.fit(Xtrain,ytrain)
+    predictedLogistic = fit.predict_proba(X_test)[:,1]
     return predictedLogistic
 
-def randomForestModel(Xtrain, ytrain):
+def randomForestModel(Xtrain, ytrain,X_test):
     parameters = {'class_weight':['balanced', None],
                 'max_depth': [2,3,4],
                 'max_features': ['auto',4]
                 }
     gscv = GridSearchCV(RandomForestClassifier(), parameters)
     fit = gscv.fit(Xtrain, ytrain)
-    print('Best parameters: {}'.format(fit.best_params_))
-    predictedRF = fit.predict_proba(Xtrain)[:,1]
+    print('Best parameters for RF: {}'.format(fit.best_params_))
+    predictedRF = fit.predict_proba(X_test)[:,1]
     return predictedRF
 
-
-def adaBoost(Xtrain, ytrain):
+def GradientBoost(Xtrain, ytrain,X_test):
     parameters = {'learning_rate':[0.5,1.0],
                     'n_estimators':  [200,300]
                     }
-    decisionTree = AdaBoostClassifier(DecisionTreeClassifier(max_depth=1))
+    decisionTree = GradientBoostingClassifier()
     gscv = GridSearchCV(decisionTree, parameters,scoring = 'roc_auc')
     fit = gscv.fit(Xtrain, ytrain)
-    print('Best parameters: {}'.format(fit.best_params_))
-    predictedAda = fit.predict_proba(Xtrain)[:,1]
+    print('Best parameters for GBM: {}'.format(fit.best_params_))
+    predictedGradient = fit.predict_proba(X_test)[:,1]
+    return predictedGradient
+
+def adaBoost(Xtrain, ytrain,X_test):
+    parameters = {'learning_rate':[0.5,1.0],
+                    'n_estimators':  [200,300]
+                    }
+    decisionTree = AdaBoostClassifier(DecisionTreeClassifier(max_depth=3))
+    gscv = GridSearchCV(decisionTree, parameters,scoring = 'roc_auc')
+    fit = gscv.fit(Xtrain, ytrain)
+    print('Best parameters for ABM: {}'.format(fit.best_params_))
+    predictedAda = fit.predict_proba(X_test)[:,1]
     return predictedAda
 
-def adaBoost_predict(Xtrain, ytrain):
+def adaBoost_predict(Xtrain, ytrain,X_test):
     parameters = {'learning_rate':[0.5,1.0],
                     'n_estimators':  [200,300]
                     }
@@ -49,7 +60,7 @@ def adaBoost_predict(Xtrain, ytrain):
     gscv = GridSearchCV(decisionTree, parameters,scoring = 'roc_auc')
     fit = gscv.fit(Xtrain, ytrain)
     print('Best paremters: {}'.format(fit.best_params_))
-    predictedAda = fit.predict(Xtrain)
+    predictedAda = fit.predict(X_test)
     return predictedAda
 
 
@@ -146,34 +157,41 @@ def plot_model_profits(profits, save_path=None):
 if __name__ == '__main__':
     print("$ READ FILES")
     churnTrainDF = pd.read_csv('data/churn_train.csv',parse_dates=['last_trip_date','signup_date'])
-    # X = churnTrainDF[['avg_dist', 'avg_surge']]
-    # y = churnTrainDF['luxury_car_user']*1
     y = build_y(churnTrainDF)
     df = feature_engineering(churnTrainDF)
-    # X = build_X(df,model="not logistic")
     X = build_X(df)
 
+    churnTestDF = pd.read_csv('data/churn_test.csv',parse_dates=['last_trip_date','signup_date'])
+    y_test = build_y(churnTestDF)
+    df2 = feature_engineering(churnTestDF)
+    X_test = build_X(df2)
+
+
     print("$ Modeling")
-    predictedLogistic = logisticModel(X, y)
-    predictedRF = randomForestModel(X, y)
-    predictedAda = adaBoost(X, y)
-    predictedAda_label = adaBoost_predict(X,y)
+    predictedLogistic = logisticModel(X, y, X_test)
+    predictedRF = randomForestModel(X, y, X_test)
+    predictedGradient = GradientBoost(X,y, X_test)
+    predictedAda = adaBoost(X, y, X_test)
+    predictedAda_label = adaBoost_predict(X,y, X_test)
 
 
     #plot the ROC curves for different models
     print("$ ROC curves")
-    fpr_l, tpr_l, thresholds_l = roc_curve(y, predictedLogistic)
+    fpr_l, tpr_l, thresholds_l = roc_curve(y_test, predictedLogistic)
     auc_score_l = auc(fpr_l, tpr_l)
-    fpr_rf, tpr_rf, thresholds_rf = roc_curve(y, predictedRF)
+    fpr_rf, tpr_rf, thresholds_rf = roc_curve(y_test, predictedRF)
     auc_score_rf = auc(fpr_rf, tpr_rf)
-    fpr_a, tpr_a, thresholds_a = roc_curve(y, predictedAda)
+    fpr_a, tpr_a, thresholds_a = roc_curve(y_test, predictedAda)
     auc_score_a = auc(fpr_a, tpr_a)
+    fpr_g, tpr_g, thresholds_g = roc_curve(y_test, predictedGradient)
+    auc_score_g = auc(fpr_g, tpr_g)
 
     plt.figure(1)
     plt.plot([0, 1], [0, 1], 'k--')
     plt.plot(fpr_l, tpr_l, label= ('Logistic, AUC: {0:.2f}'.format(auc_score_l)))
     plt.plot(fpr_rf, tpr_rf, label=('Random Forest, AUC: {0:.2f}'.format(auc_score_rf)))
-    plt.plot(fpr_a, tpr_a, label=('Adaboost, AUC: {0:.2f}'.format(auc_score_a)))
+    plt.plot(fpr_a, tpr_a, label=('AdaBoosting, AUC: {0:.2f}'.format(auc_score_a)))
+    plt.plot(fpr_g, tpr_g, label=('GradientBoosting, AUC: {0:.2f}'.format(auc_score_g)))
     plt.xlabel('False positive rate')
     plt.ylabel('True positive rate')
     plt.title('ROC curve')
