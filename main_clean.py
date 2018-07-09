@@ -53,38 +53,12 @@ def adaBoost(Xtrain, ytrain,X_test):
     predictedAda = fit.predict_proba(X_test)[:,1]
     return predictedAda
 
-# def GradientBoost_predict(Xtrain, ytrain,X_test):
-#     # parameters = {'learning_rate':[0.5,1.0],
-#     #                 'n_estimators':  [200,300]
-#     #                 }
-#     # decisionTree = AdaBoostClassifier(DecisionTreeClassifier(max_depth=3))
-#     # gscv = GridSearchCV(decisionTree, parameters,scoring = 'roc_auc')
-#     gb = GradientBoostingClassifier(learning_rate=0.5,n_estimators=200)
-#     fit = gb.fit(Xtrain, ytrain)
-#     # print('Best paremters: {}'.format(fit.best_params_))
-#     predictedGradient = fit.predict(X_test)
-#     return predictedGradient
-
-
-# def profit_curve(yTrue,yHat):
-#     [[tn, fp], [fn, tp]] = confusion_matrix(yTrue, yHat[:,1])
-#     cost_benefit = np.array([[6, -3], [0, 0]])
-#     thresholds = [1.0, 0.6, 0.4, 0.2]
-#     confusion_matrices = [[tn, fp], [fn, tp]]
-#     total_observations = len(yTrue)
-
-#     for threshold, confusion_matrix in zip(thresholds, confusion_matrices):
-#         threshold_expected_profit = np.sum(cost_benefit * confusion_matrix) / total_observations
-#         print('Profit at threshold of {}: {}'.format(threshold, threshold_expected_profit))
-
 def standard_confusion_matrix(y_true, y_pred):
     [[tn, fp], [fn, tp]] = confusion_matrix(y_true, y_pred)
     return np.array([[tp, fp], [fn, tn]])
 
 def profit_curve(cost_benefit, predicted_probs, labels):
     n_obs = float(len(labels))
-    # maybe_one = [] if 1 in predicted_probs else [1]
-    # thresholds = maybe_one + sorted(predicted_probs, reverse=True)
     thresholds = np.arange(0,1,0.01)
     profits = []
     for threshold in thresholds:
@@ -92,21 +66,11 @@ def profit_curve(cost_benefit, predicted_probs, labels):
         confusion_matrix = standard_confusion_matrix(labels, y_predict)
         threshold_profit = np.sum(confusion_matrix * cost_benefit) / n_obs
         profits.append([threshold_profit,threshold])
-    # profits = ((np.array(profits), np.array(thresholds)))
     return profits
 
 
 
 def plot_model_profits(profits, save_path=None):
-    """Plotting function to compare profit curves of different models.
-    Parameters
-    ----------
-    model_profits : list((model, profits, thresholds))
-    save_path     : str, file path to save the plot to. If provided plot will be
-                         saved and not shown.
-    """
-    
-    # percentages = np.linspace(0, 100, len(profits))
     threshold = []
     profit = []
     for p in profits:
@@ -114,11 +78,9 @@ def plot_model_profits(profits, save_path=None):
         profit.append(p[0])
     plt.figure(figsize=(8,6))
     plt.plot(threshold, profit)
-
     plt.title("Profit Curve")
     plt.xlabel("TPR-FPR Threshold")
     plt.ylabel("Profit ($/user)")
-    # plt.legend(loc='best')
     if save_path:
         plt.savefig(save_path)
     else:
@@ -139,35 +101,33 @@ if __name__ == '__main__':
 
 
     print("$ Modeling")
-    # predictedLogistic = logisticModel(X, y, X_test)
-    # predictedRF = randomForestModel(X, y, X_test)
+    predictedLogistic = logisticModel(X, y, X_test)
+    predictedRF = randomForestModel(X, y, X_test)
     predictedGradient = GradientBoost(X,y, X_test)
-    # predictedAda = adaBoost(X, y, X_test)
-    # predictedGradient_label = GradientBoost_predict(X,y, X_test)
-
+    predictedAda = adaBoost(X, y, X_test)
 
     # Plot the ROC curves for different models
     print("$ ROC curves")
-    # fpr_l, tpr_l, thresholds_l = roc_curve(y_test, predictedLogistic)
-    # auc_score_l = auc(fpr_l, tpr_l)
-    # fpr_rf, tpr_rf, thresholds_rf = roc_curve(y_test, predictedRF)
-    # auc_score_rf = auc(fpr_rf, tpr_rf)
-    # fpr_a, tpr_a, thresholds_a = roc_curve(y_test, predictedAda)
-    # auc_score_a = auc(fpr_a, tpr_a)
-    # fpr_g, tpr_g, thresholds_g = roc_curve(y_test, predictedGradient)
-    # auc_score_g = auc(fpr_g, tpr_g)
+    fpr_l, tpr_l, thresholds_l = roc_curve(y_test, predictedLogistic)
+    auc_score_l = auc(fpr_l, tpr_l)
+    fpr_rf, tpr_rf, thresholds_rf = roc_curve(y_test, predictedRF)
+    auc_score_rf = auc(fpr_rf, tpr_rf)
+    fpr_a, tpr_a, thresholds_a = roc_curve(y_test, predictedAda)
+    auc_score_a = auc(fpr_a, tpr_a)
+    fpr_g, tpr_g, thresholds_g = roc_curve(y_test, predictedGradient)
+    auc_score_g = auc(fpr_g, tpr_g)
 
-    # plt.figure(1)
-    # plt.plot([0, 1], [0, 1], 'k--')
-    # plt.plot(fpr_l, tpr_l, label= ('Logistic, AUC: {0:.2f}'.format(auc_score_l)))
-    # plt.plot(fpr_rf, tpr_rf, label=('Random Forest, AUC: {0:.2f}'.format(auc_score_rf)))
-    # plt.plot(fpr_a, tpr_a, label=('AdaBoosting, AUC: {0:.2f}'.format(auc_score_a)))
-    # plt.plot(fpr_g, tpr_g, label=('GradientBoosting, AUC: {0:.2f}'.format(auc_score_g)))
-    # plt.xlabel('False positive rate')
-    # plt.ylabel('True positive rate')
-    # plt.title('ROC curve')
-    # plt.legend(loc='best')
-    # plt.show()
+    plt.figure(1)
+    plt.plot([0, 1], [0, 1], 'k--')
+    plt.plot(fpr_l, tpr_l, label= ('Logistic, AUC: {0:.2f}'.format(auc_score_l)))
+    plt.plot(fpr_rf, tpr_rf, label=('Random Forest, AUC: {0:.2f}'.format(auc_score_rf)))
+    plt.plot(fpr_a, tpr_a, label=('AdaBoosting, AUC: {0:.2f}'.format(auc_score_a)))
+    plt.plot(fpr_g, tpr_g, label=('GradientBoosting, AUC: {0:.2f}'.format(auc_score_g)))
+    plt.xlabel('False positive rate')
+    plt.ylabel('True positive rate')
+    plt.title('ROC curve')
+    plt.legend(loc='best')
+    plt.show()
 
     # Plot PDPs
     print("$ PDP Plots")
