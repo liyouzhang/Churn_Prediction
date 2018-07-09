@@ -3,7 +3,8 @@ import pandas as pd
 from sklearn.linear_model import LogisticRegression
 from sklearn import metrics
 from sklearn.metrics import roc_curve, auc, confusion_matrix
-from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier, GradientBoostingClassifier
+from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier, GradientBoostingClassifier, GradientBoostingRegressor
+from sklearn.ensemble.partial_dependence import plot_partial_dependence, partial_dependence
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.model_selection import GridSearchCV, cross_val_predict
 import matplotlib.pyplot as plt
@@ -175,7 +176,7 @@ if __name__ == '__main__':
     predictedAda_label = adaBoost_predict(X,y, X_test)
 
 
-    #plot the ROC curves for different models
+    # Plot the ROC curves for different models
     print("$ ROC curves")
     fpr_l, tpr_l, thresholds_l = roc_curve(y_test, predictedLogistic)
     auc_score_l = auc(fpr_l, tpr_l)
@@ -198,6 +199,27 @@ if __name__ == '__main__':
     plt.legend(loc='best')
     plt.show()
 
+    # Plot PDPs
+    print("$ PDP Plots")
+
+    clf = GradientBoostingRegressor(learning_rate=0.5, n_estimators=200, max_depth=3)
+    fit = clf.fit(X, y)
+
+    names = ['avg_dist_log', 'avg_rating_by_driver_log', 'avg_rating_of_driver_log',
+       'avg_surge', 'surge_pct', 'trips_in_first_30_days', 'weekday_pct',
+       "city_King's Landing", 'city_Winterfell', 'phone_iPhone',
+       'luxury_car_user_True', 'user_lifespan', 'user_rated_driver',
+       'user_rated_driver_avg_rating_of_driver']
+    features = [0,1,2,3,4,5,6,7,8,9,10,11,12,13]
+
+    pdp = plt.figure(figsize=(16,8))
+    fig, axs = plot_partial_dependence(fit, X, features, feature_names=names, n_jobs=2, grid_resolution=50)
+    fig.set_size_inches(18,12)
+    fig.tight_layout()
+    # axs.x_axis.label.set_size(30)
+    # axs.y_axis.label.set_size(30)
+    fig.savefig('pdp.png')
+    plt.close(pdp)
 
     cost_benefit = np.array([[7, -3], [0, 0]])
     profits = profit_curve(cost_benefit,predictedAda,y)
