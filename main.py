@@ -56,7 +56,7 @@ def adaBoost_predict(Xtrain, ytrain,X_test):
     parameters = {'learning_rate':[0.5,1.0],
                     'n_estimators':  [200,300]
                     }
-    decisionTree = AdaBoostClassifier(DecisionTreeClassifier(max_depth=1))
+    decisionTree = AdaBoostClassifier(DecisionTreeClassifier(max_depth=3))
     gscv = GridSearchCV(decisionTree, parameters,scoring = 'roc_auc')
     fit = gscv.fit(Xtrain, ytrain)
     print('Best paremters: {}'.format(fit.best_params_))
