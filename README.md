@@ -11,21 +11,21 @@ A ride-sharing company is interested in predicting rider retention.
 
 ## Suggestions
 
-* The best strategy to be adopted will depend on the stage and priorities of the company.
+The best strategy to be adopted will depend on the stage and priorities of the company.
 * If the churn definition is aggressive (i.e. a user is considered to have churned if he/she has not used the service in 30 days), the company can make a profit of up to $8.2 per user by sending out $20 per year in promotions to users predicted to churn.
 * If the churn definition is standard (i.e. 90 days), the company can make a profit of up to $4 per user by sending out $20 per year in promotions to users predicted to churn.
 
-* Assumptions:
-    * User value: $40 user/year
-    * Campaign cost: $20 user/year
-    * These figures are consistent with an annual revenue of $ 1 Billion and 5 million users (Lyft 2017).
+Assumptions:
+* User value: $40 user/year
+* Campaign cost: $20 user/year
+* These figures are consistent with an annual revenue of $ 1 Billion and 5 million users (Lyft 2017).
 
 ## Data
 
 * `city`: city this user signed up in
 phone: primary device for this user
-signup_date: date of account registration; in the form `YYYYMMDD`
-* `last_trip_date`: the last time this user completed a trip; in the form `YYYYMMDD`
+signup_date: date of account registration, in the form `YYYYMMDD`
+* `last_trip_date`: the last time this user completed a trip, in the form `YYYYMMDD`
 * `avg_dist`: the average distance (in miles) per trip taken in the first 30 days after signup
 * `avg_rating_by_driver`: the rider’s average rating over all of their trips
 * `avg_rating_of_driver`: the rider’s average rating of their drivers over all of their trips
@@ -68,14 +68,20 @@ The metric used to compare performance was the Area Under the Curve for the Reic
 
 * 30 days
 ![ROC Plot][roc_30]
+
 * 90 days
 ![ROC Plot][roc_90]
+
 * 30 days
 ![Partial Dependence Plot][pdp_30]
+
 * 90 days
 ![Partial Dependence Plot][pdp_90]
+
 * Profit curves
+    
     * 30 days
 ![Profit Curve][profit_30]
+    
     * 90 days
 ![Profit Curve][profit_90]
