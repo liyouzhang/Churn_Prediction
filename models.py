@@ -2,6 +2,8 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier, GradientBoostingClassifier, GradientBoostingRegressor
 from sklearn.model_selection import GridSearchCV, cross_val_predict
 from sklearn.tree import DecisionTreeClassifier
+from sklearn.preprocessing import OneHotEncoder
+from sklearn.model_selection import train_test_split
 
 def logisticModel(Xtrain, ytrain, X_test):
     # logReg = LogisticRegression()
@@ -44,3 +46,34 @@ def adaBoost(Xtrain, ytrain,X_test):
     print('Best parameters for ABM: {}'.format(fit.best_params_))
     predictedAda = fit.predict_proba(X_test)[:,1]
     return predictedAda
+
+
+def GBC_Logistic(X_train,y_train,X_test):
+    X_train, X_train_lr, y_train, y_train_lr = train_test_split(X_train,
+                                                            y_train,
+                                                            test_size=0.5)
+    grd = GradientBoostingClassifier(n_estimators=200,learning_rate=0.5)
+    grd_enc = OneHotEncoder()
+    grd_lm = LogisticRegression()
+    grd.fit(X_train, y_train)
+    grd_enc.fit(grd.apply(X_train)[:, :, 0])
+    grd_lm.fit(grd_enc.transform(grd.apply(X_train_lr)[:, :, 0]), y_train_lr)
+    y_pred_grd_lm = grd_lm.predict_proba(
+    grd_enc.transform(grd.apply(X_test)[:, :, 0]))[:, 1]
+    return y_pred_grd_lm
+    # fpr_grd_lm, tpr_grd_lm, _ = roc_curve(y_test, y_pred_grd_lm)
+
+def RF_Logistic(X_train,y_train,X_test):
+    X_train, X_train_lr, y_train, y_train_lr = train_test_split(X_train,
+                                                            y_train,
+                                                            test_size=0.5)
+    grd = RandomForestClassifier(max_depth=4,max_features=5)
+    grd_enc = OneHotEncoder()
+    grd_lm = LogisticRegression()
+    grd.fit(X_train, y_train)
+    # print(grd.apply(X_train).shape)
+    grd_enc.fit(grd.apply(X_train))
+    grd_lm.fit(grd_enc.transform(grd.apply(X_train_lr)), y_train_lr)
+    y_pred_grd_lm = grd_lm.predict_proba(
+    grd_enc.transform(grd.apply(X_test)))[:, 1]
+    return y_pred_grd_lm

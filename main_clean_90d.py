@@ -18,7 +18,7 @@ if __name__ == '__main__':
     churnTrainDF = pd.read_csv('data/churn_train.csv',parse_dates=['last_trip_date','signup_date'])
     churnTestDF = pd.read_csv('data/churn_test.csv',parse_dates=['last_trip_date','signup_date'])
 
-    # Churn = 30 days
+
     n_days = '90 days'
     y = build_y(churnTrainDF, delta_days=n_days)
     X = build_X(churnTrainDF, delta_days=n_days)
@@ -99,5 +99,5 @@ if __name__ == '__main__':
     print('confusion matrix',confusion_matrix)
     threshold_profit = np.sum(confusion_matrix * cost_benefit) / y_test.shape[0]
     print('profit',threshold_profit)
-    #default n_days is '30 days'
+
     plot_model_profits(profits,save_path='{} profit.png'.format(n_days),n_days=n_days)
