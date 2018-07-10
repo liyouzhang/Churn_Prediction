@@ -59,12 +59,23 @@ The metric used to compare performance was the Area Under the Curve for the Reic
 
 ### 3. Results
 
-[pdp_30]:
-[pdp_90]:
-[profit_30]:
-[profit_90]:
-[roc_30]:
-[roc_90]:
+[pdp_30]: https://github.com/liyouzhang/Churn_Prediction/blob/working/pdp_30.png?raw=true
+[pdp_90]: https://github.com/liyouzhang/Churn_Prediction/blob/working/pdp_90.png?raw=true
+[profit_30]: https://github.com/liyouzhang/Churn_Prediction/blob/working/profit_30.png?raw=true
+[profit_90]: https://github.com/liyouzhang/Churn_Prediction/blob/working/profit_90.png?raw=true
+[roc_30]: https://github.com/liyouzhang/Churn_Prediction/blob/working/roc_30.png?raw=true
+[roc_90]: https://github.com/liyouzhang/Churn_Prediction/blob/working/roc_90.png?raw=true
 
+* 30 days
+![ROC Plot][roc_30]
+* 90 days
+![ROC Plot][roc_90]
+* 30 days
 ![Partial Dependence Plot][pdp_30]
+* 90 days
 ![Partial Dependence Plot][pdp_90]
+* Profit curves
+    * 30 days
+![Profit Curve][profit_30]
+    * 90 days
+![Profit Curve][profit_90]
