@@ -58,22 +58,16 @@ if __name__ == '__main__':
 
     # Plot PDPs
     print("$ PDP Plots")
-    clf = GradientBoostingRegressor(learning_rate=0.5, n_estimators=200, max_depth=3)
+    clf = GradientBoostingClassifier(learning_rate=0.5, n_estimators=200, max_depth=3)
     fit = clf.fit(X, y)
 
-    # names = ['avg_dist_log', 'avg_rating_by_driver_log', 'avg_rating_of_driver_log',
-    #    'avg_surge', 'surge_pct', 'trips_in_first_30_days', 'weekday_pct',
-    #    "city_King's Landing", 'city_Winterfell', 'phone_iPhone',
-    #    'luxury_car_user_True', 'user_lifespan', 'user_rated_driver',
-    #    'user_rated_driver_avg_rating_of_driver', 'city_Astapor', 'phone_Android',
-    #     'luxury_car_user_False', 'avg_dist', 'avg_rating_by_driver', 'avg_rating_of_driver']
-    # features = [0,1,2,3,4,5,6,7,8,9,10,11,12,13, 14, 15, 16, 17, 18, 19]
+    names = ['avg_dist_log', 'avg_rating_by_driver_log', 'avg_rating_of_driver_log',
+       'avg_surge', 'surge_pct', 'trips_in_first_30_days', 'weekday_pct',
+       "city_King's Landing", 'city_Winterfell', 'phone_iPhone',
+       'luxury_car_user_True', 'user_lifespan', 'user_rated_driver',
+       'user_rated_driver_avg_rating_of_driver', 'city_Astapor', 'phone_Android',
+        'luxury_car_user_False', 'avg_dist', 'avg_rating_by_driver', 'avg_rating_of_driver']
 
-    names = ['trips_in_first_30_days', 'phone_iPhone', 'phone_Android',
-       'avg_surge', 'surge_pct',  'weekday_pct',
-       "city_King's Landing", 'city_Winterfell', 'city_Astapor',
-       'luxury_car_user_True', 'luxury_car_user_False', 'user_lifespan',
-        'avg_dist', 'avg_rating_by_driver', 'avg_rating_of_driver']
     features = [5,9,15,3,4,6,7,8,14,16,10,11,17,18,19]
 
     pdp = plt.figure(figsize=(16,8))
