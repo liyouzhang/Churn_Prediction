@@ -79,13 +79,16 @@ https://github.com/liyouzhang/Churn_Prediction/blob/working/pictures/90%20days%2
 
 * ROC curves
 
-<img align="left" width="400" height="300" src="https://github.com/liyouzhang/Churn_Prediction/blob/working/pictures/90%20days%20roc.png?raw=true">
+<img align="left" width="400" height="300" src="https://github.com/liyouzhang/Churn_Prediction/blob/working/pictures/30%20days%20roc.png?raw=true">
 
 <img align="right" width="400" height="300" src="https://github.com/liyouzhang/Churn_Prediction/blob/working/pictures/90%20days%20roc.png?raw=true">
 
 
 <p align="center">
 <img align="center" width="700" height="500" src="https://github.com/liyouzhang/Churn_Prediction/blob/working/pictures/30%20days%20pdp.png?raw=true">
+
+
+-----------
 
 <img align="center" width="700" height="500" src="https://github.com/liyouzhang/Churn_Prediction/blob/working/pictures/90%20days%20pdp.png?raw=true">
 
