@@ -12,12 +12,13 @@ A ride-sharing company is interested in predicting rider retention.
 ## Suggestions
 
 The best strategy to be adopted will depend on the stage and priorities of the company.
-* If the churn definition is aggressive (i.e. a user is considered to have churned if he/she has not used the service in 30 days), the company can make a profit of up to $8.2 per user by sending out $20 per year in promotions to users predicted to churn.
+* If the churn definition is aggressive (i.e. a user is considered to have churned if he/she has not used the service in 30 days), the company can make a profit of up to $8 per user by sending out $20 per year in promotions to users predicted to churn.
 * If the churn definition is standard (i.e. 90 days), the company can make a profit of up to $4 per user by sending out $20 per year in promotions to users predicted to churn.
 
 Assumptions:
 * User value: $40 user/year
 * Campaign cost: $20 user/year
+* 100% success rate of campaign (profit is non-negative at >= 50% success rate)
 * These figures are consistent with an annual revenue of $ 1 Billion and 5 million users (Lyft 2017).
 
 ## Data
@@ -53,35 +54,65 @@ The four models run were:
 * Random Forest
 * Gradient Boosting
 * Adaboost
+* Gradient Boosting + Logistic Regression ensemble
+* Random Forest + Logistic Regression ensemble
 
 For each model, a Cross-Validation with Grid Search to optimize hyperparameters was conducted.
 The metric used to compare performance was the Area Under the Curve for the Reiceiver-Operator Curve (AUC/ROC), which portrays the tradeoff between true positive rate (TPR) and false positive rate (FPR) for Classification Models.
 
 ### 3. Results
 
-[pdp_30]: https://github.com/liyouzhang/Churn_Prediction/blob/working/pdp_30.png?raw=true
-[pdp_90]: https://github.com/liyouzhang/Churn_Prediction/blob/working/pdp_90.png?raw=true
-[profit_30]: https://github.com/liyouzhang/Churn_Prediction/blob/working/profit_30.png?raw=true
-[profit_90]: https://github.com/liyouzhang/Churn_Prediction/blob/working/profit_90.png?raw=true
-[roc_30]: https://github.com/liyouzhang/Churn_Prediction/blob/working/roc_30.png?raw=true
-[roc_90]: https://github.com/liyouzhang/Churn_Prediction/blob/working/roc_90.png?raw=true
+[pdp_30]: 
+https://github.com/liyouzhang/Churn_Prediction/blob/working/pictures/30%20days%20pdp.png?raw=true
 
-* 30 days
-![ROC Plot][roc_30]
+[pdp_90]: 
+https://github.com/liyouzhang/Churn_Prediction/blob/working/pictures/90%20days%20pdp.png?raw=true
+
+
+[profit_30]: https://github.com/liyouzhang/Churn_Prediction/blob/working/pictures/30%20days%20profit.png?raw=true
+
+[profit_90]: https://github.com/liyouzhang/Churn_Prediction/blob/working/pictures/90%20days%20profit.png?raw=true
+
+[roc_30]: https://github.com/liyouzhang/Churn_Prediction/blob/working/pictures/30%20days%20roc.png?raw=true
+
+[roc_90]: https://github.com/liyouzhang/Churn_Prediction/blob/working/pictures/90%20days%20roc.png?raw=true
+
+* ROC curves
+
+<img align="left" width="265" height="200" src="https://github.com/liyouzhang/Churn_Prediction/blob/working/pictures/90%20days%20roc.png?raw=true">
+
+<img align="right" width="265" height="200" src="https://github.com/liyouzhang/Churn_Prediction/blob/working/pictures/90%20days%20roc.png?raw=true">
+
+
+<p align="center">
+<img align="left" width="550" height="400" src="https://github.com/liyouzhang/Churn_Prediction/blob/working/pictures/30%20days%20pdp.png?raw=true">
+
+<img align="left" width="550" height="400" src="https://github.com/liyouzhang/Churn_Prediction/blob/working/pictures/90%20days%20pdp.png?raw=true
+">
+
+
+* markdown
+
+<img align="left" width="260" height="200" src="https://github.com/liyouzhang/Churn_Prediction/blob/working/pictures/30%20days%20profit.png?raw=true">
+
+<img align="right" width="260" height="200" src="https://github.com/liyouzhang/Churn_Prediction/blob/working/pictures/90%20days%20profit.png?raw=true
+">
+
+<!-- ![ROC Plot][roc_30]
 
 * 90 days
-![ROC Plot][roc_90]
+![ROC Plot][roc_90] -->
 
-* 30 days
+<!-- * 30 days
 ![Partial Dependence Plot][pdp_30]
 
 * 90 days
-![Partial Dependence Plot][pdp_90]
+![Partial Dependence Plot][pdp_90] -->
 
-* Profit curves
+<!-- * Profit curves
     
     * 30 days
 ![Profit Curve][profit_30]
     
     * 90 days
-![Profit Curve][profit_90]
+![Profit Curve][profit_90] -->
