@@ -79,23 +79,21 @@ https://github.com/liyouzhang/Churn_Prediction/blob/working/pictures/90%20days%2
 
 * ROC curves
 
-<img align="left" width="265" height="200" src="https://github.com/liyouzhang/Churn_Prediction/blob/working/pictures/90%20days%20roc.png?raw=true">
+<img align="center" width="550" height="400" src="https://github.com/liyouzhang/Churn_Prediction/blob/working/pictures/90%20days%20roc.png?raw=true">
 
-<img align="right" width="265" height="200" src="https://github.com/liyouzhang/Churn_Prediction/blob/working/pictures/90%20days%20roc.png?raw=true">
+<img align="center" width="550" height="400" src="https://github.com/liyouzhang/Churn_Prediction/blob/working/pictures/90%20days%20roc.png?raw=true">
 
 
 <p align="center">
-<img align="left" width="550" height="400" src="https://github.com/liyouzhang/Churn_Prediction/blob/working/pictures/30%20days%20pdp.png?raw=true">
+<img align="left" width="700" height="500" src="https://github.com/liyouzhang/Churn_Prediction/blob/working/pictures/30%20days%20pdp.png?raw=true">
 
-<img align="left" width="550" height="400" src="https://github.com/liyouzhang/Churn_Prediction/blob/working/pictures/90%20days%20pdp.png?raw=true
-">
+<img align="left" width="700" height="500" src="https://github.com/liyouzhang/Churn_Prediction/blob/working/pictures/90%20days%20pdp.png?raw=true">
 
 
-* markdown
 
-<img align="left" width="260" height="200" src="https://github.com/liyouzhang/Churn_Prediction/blob/working/pictures/30%20days%20profit.png?raw=true">
+<img align="left" width="500" height="400" src="https://github.com/liyouzhang/Churn_Prediction/blob/working/pictures/30%20days%20profit.png?raw=true">
 
-<img align="right" width="260" height="200" src="https://github.com/liyouzhang/Churn_Prediction/blob/working/pictures/90%20days%20profit.png?raw=true
+<img align="right" width="500" height="400" src="https://github.com/liyouzhang/Churn_Prediction/blob/working/pictures/90%20days%20profit.png?raw=true
 ">
 
 <!-- ![ROC Plot][roc_30]
