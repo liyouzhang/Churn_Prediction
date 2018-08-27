@@ -117,4 +117,4 @@ https://github.com/liyouzhang/Churn_Prediction/blob/working/pictures/90%20days%2
 ![Profit Curve][profit_30]
     
     * 90 days
-![Profit Curve][profit_90] -->
+![Profit Curve][profit_90]
