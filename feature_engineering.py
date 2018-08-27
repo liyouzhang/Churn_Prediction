@@ -4,6 +4,18 @@ import numpy as np
 # df = pd.read_csv('data/churn_train.csv')
 
 def build_y(df, delta_days='30 days'):
+    '''build y label (bool) for each data point based on the delta_days used in the defination of churn.
+    
+    Arguments:
+        df {[pandas dataframe]} -- input dataframe
+    
+    Keyword Arguments:
+        delta_days {str} -- [the variable used in the defination of user's churning] (default: {'30 days'})
+    
+    Returns:
+        y{pandas series} -- bool series created based on the defination of churn
+    '''
+
     today = df['last_trip_date'].max()
     delta = pd.Timedelta(delta_days)
     df['churn?'] = (df['last_trip_date'] < (today-delta)) *1
@@ -11,19 +23,36 @@ def build_y(df, delta_days='30 days'):
     return y
 
 def fill_cont_nans(df, col_list=['avg_rating_by_driver', 'avg_rating_of_driver'], grouper=['city', 'luxury_car_user']):
+    '''Fill nans of continuous features
+
+    Arguments:
+        df {[pandas dataframe]} -- input dataframe
+
+    Keyword Arguments:
+        col_list {list} -- [column names of continuous features] (default: {['avg_rating_by_driver', 'avg_rating_of_driver']})
+        grouper {list} -- [features to group by] (default: {['city', 'luxury_car_user']})
+
+    Returns:
+        df {[pandas dataframe]} -- output dataframe
+    '''
+
     for col in col_list:
         df[col].fillna(df.groupby(grouper)[col].transform('median'), inplace=True)
     return df
 
-# def fill_categ_nans(df, col_list=['phone']):
-#     for col in col_list:
-#         # value = df[col].mode().values.flatten()
-#         # # print(value[0])
-#         # df[col] = df[col].fillna(value[0], inplace=True)
-#         df[col] = df[col].fillna('iPhone', inplace=True)
-#     return df
-
 def fill_categ_nans(df, col_list=['phone']):
+    '''Fill nans of categorical features.
+
+   Arguments:
+        df {[pandas dataframe]} -- input dataframe
+
+    Keyword Arguments:
+        col_list {list} -- [column names of categorical features] (default: {['phone']})
+
+    Returns:
+        df {[pandas dataframe]} -- output dataframe
+    '''
+
     for col in col_list:
         value = df[col].mode().values.flatten()
         # df.loc[df['phone'].isnull(), 'phone'] = value[0]
@@ -32,17 +61,49 @@ def fill_categ_nans(df, col_list=['phone']):
 
 
 def dummify(df, col_list=['city', 'phone', 'luxury_car_user']):
+    '''
+   Arguments:
+        df {[pandas dataframe]} -- input dataframe
+
+    Keyword Arguments:
+        col_list {list} -- [column names of features to be dummified] (default: {['city', 'phone', 'luxury_car_user']})
+
+    Returns:
+        df {[pandas dataframe]} -- output dataframe
+    '''
+
     for col in col_list:
         dummies = pd.get_dummies(df[col],prefix=col)
         df[dummies.columns] = dummies
     return df
 
 def logify(df, col_list=['avg_dist', 'avg_rating_by_driver', 'avg_rating_of_driver']):
+    '''log transform features
+    Arguments:
+        df {[pandas dataframe]} -- input dataframe
+
+    Keyword Arguments:
+        col_list {list} -- [features to be logrified] (default: {['avg_dist', 'avg_rating_by_driver', 'avg_rating_of_driver']})
+
+    Returns:
+        df {[pandas dataframe]} -- output dataframe
+    '''
+
     for col in col_list:
         df[col+'_log'] = np.log(df[col]+1)
     return df
 
 def feature_creation(df, delta_days):
+    '''create the feature of user_lifespan
+    
+    Arguments:
+        df {[pandas dataframe]} -- input dataframe
+        delta_days {str} -- [the variable used in the defination of user's churning] (default: {'30 days'})
+
+    Returns:
+        df {[pandas dataframe]} -- output dataframe
+    '''
+
     # Create user lifespan
     today = df['last_trip_date'].max()
     delta = pd.Timedelta(delta_days)
@@ -52,22 +113,23 @@ def feature_creation(df, delta_days):
     return df
 
 def interactify(df, interacter1=['user_rated_driver'], interacter2=['avg_rating_of_driver']):
+    '''create new features as interaction between two features
+    Arguments:
+        df {[pandas dataframe]} -- input dataframe
+
+    Keyword Arguments:
+        interacter1 {list} -- [list of column names] (default: {['user_rated_driver']})
+        interacter2 {list} -- [list of column names] (default: {['avg_rating_of_driver']})
+
+    Returns:
+        df {[pandas dataframe]} -- output dataframe
+    '''
+
     # print(type(df["user_rated_driver"]))
     for col1, col2 in zip(interacter1, interacter2):
         df[col1+'_'+col2] = df[col1] * df[col2]
     return df
 
-# def feature_engineering(df):
-#     data = fill_cont_nans(df, ['avg_rating_by_driver', 'avg_rating_of_driver'], ['city', 'luxury_car_user'])
-#     data = fill_categ_nans(data, ['phone'])
-#     # print(df.phone.value_counts())
-#     data = dummify(data, ['city', 'phone', 'luxury_car_user'])
-#     # print(df.columns)
-#     logify(df, ['avg_dist', 'avg_rating_by_driver', 'avg_rating_of_driver'])
-#     data = feature_creation(data, '30 days')
-#     data = interactify(data, interacter1=['user_rated_driver'], interacter2=['avg_rating_of_driver'])
-#     # print(df.columns)
-#     return df
 
 def build_X(df, model='GradientBoostingRegressor', delta_days='30 days'):
     data = fill_cont_nans(df, ['avg_rating_by_driver', 'avg_rating_of_driver'], ['city', 'luxury_car_user'])
@@ -96,3 +158,14 @@ def build_X(df, model='GradientBoostingRegressor', delta_days='30 days'):
         X = data[cols_to_keep+cols_to_keep_nonparam]
     return X
 
+# def feature_engineering(df):
+#     data = fill_cont_nans(df, ['avg_rating_by_driver', 'avg_rating_of_driver'], ['city', 'luxury_car_user'])
+#     data = fill_categ_nans(data, ['phone'])
+#     # print(df.phone.value_counts())
+#     data = dummify(data, ['city', 'phone', 'luxury_car_user'])
+#     # print(df.columns)
+#     logify(df, ['avg_dist', 'avg_rating_by_driver', 'avg_rating_of_driver'])
+#     data = feature_creation(data, '30 days')
+#     data = interactify(data, interacter1=['user_rated_driver'], interacter2=['avg_rating_of_driver'])
+#     # print(df.columns)
+#     return df
