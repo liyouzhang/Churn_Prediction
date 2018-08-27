@@ -1,7 +1,6 @@
 import pandas as pd
 import numpy as np
 
-# df = pd.read_csv('data/churn_train.csv')
 
 def build_y(df, delta_days='30 days'):
     '''build y label (bool) for each data point based on the delta_days used in the defination of churn.
@@ -124,19 +123,28 @@ def interactify(df, interacter1=['user_rated_driver'], interacter2=['avg_rating_
     Returns:
         df {[pandas dataframe]} -- output dataframe
     '''
-
-    # print(type(df["user_rated_driver"]))
     for col1, col2 in zip(interacter1, interacter2):
         df[col1+'_'+col2] = df[col1] * df[col2]
     return df
 
 
 def build_X(df, model='GradientBoostingRegressor', delta_days='30 days'):
-    data = fill_cont_nans(df, ['avg_rating_by_driver', 'avg_rating_of_driver'], ['city', 'luxury_car_user'])
+    '''feature engineer pipeline to call different functions
+    
+    Arguments:
+        df {[pandas dataframe]} -- input dataframe
+ 
+    Keyword Arguments:
+        model {str} -- [name of sklearn model] (default: {'GradientBoostingRegressor'})
+        delta_days {str} -- [the variable used in the defination of user's churning] (default: {'30 days'})
+    
+    Returns:
+        df {[pandas dataframe]} -- output dataframe
+    '''
+
     data = fill_categ_nans(data, ['phone'])
-    # print(df.phone.value_counts())
+    data = fill_cont_nans(df, ['avg_rating_by_driver', 'avg_rating_of_driver'], ['city', 'luxury_car_user'])
     data = dummify(data, ['city', 'phone', 'luxury_car_user'])
-    # print(df.columns)
     logify(df, ['avg_dist', 'avg_rating_by_driver', 'avg_rating_of_driver'])
     data = feature_creation(data, delta_days)
     data = interactify(data, interacter1=['user_rated_driver'], interacter2=['avg_rating_of_driver'])
@@ -157,15 +165,3 @@ def build_X(df, model='GradientBoostingRegressor', delta_days='30 days'):
     else:
         X = data[cols_to_keep+cols_to_keep_nonparam]
     return X
-
-# def feature_engineering(df):
-#     data = fill_cont_nans(df, ['avg_rating_by_driver', 'avg_rating_of_driver'], ['city', 'luxury_car_user'])
-#     data = fill_categ_nans(data, ['phone'])
-#     # print(df.phone.value_counts())
-#     data = dummify(data, ['city', 'phone', 'luxury_car_user'])
-#     # print(df.columns)
-#     logify(df, ['avg_dist', 'avg_rating_by_driver', 'avg_rating_of_driver'])
-#     data = feature_creation(data, '30 days')
-#     data = interactify(data, interacter1=['user_rated_driver'], interacter2=['avg_rating_of_driver'])
-#     # print(df.columns)
-#     return df
